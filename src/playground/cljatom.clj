@@ -25,7 +25,7 @@
 (swap! my-vec my-conj "world")
 (println @my-vec)
 
-(doseq [t (range 10)]
+(dotimes [t 10]
   (swap! my-vec my-conj t)
   (println @my-vec))
 
