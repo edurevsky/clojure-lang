@@ -18,28 +18,34 @@
   (* (:price item) (:quantity item)))
 
 (defn items-total
+  "Returns a list containing the price * value of all items"
   [items]
   (map item-total items))
 
 (defn request-total
+  "Returns the sum of all items"
   [request]
   (let [items (vals (:items request))]
     (reduce + (items-total items))))
 
 (defn item-quantity
+  "Gets the quantity of an item"
   [item]
   (:quantity item))
 
 (defn items-quantity
+  "Returns a list of all items quantity"
   [items]
   (map item-quantity items))
 
 (defn total-items
+  "Returns the sum of all items quantity"
   [request]
   (let [items (vals (:items request))]
     (reduce + (items-quantity items))))
 
 (defn complete-request
+  "Returns a map containing the total, items-quantity and the request itself"
   [request]
   {:total          (request-total request)
    :items-quantity (total-items request)
@@ -47,6 +53,7 @@
 
 
 (defn discount-fn
+  "Returns a keyword based in the request"
   [request]
   (let [total          (:total request)
         items-quantity (:items-quantity request)]
@@ -74,11 +81,16 @@
   [request]
   1)
 
+(defn apply-discount
+  "..."
+  [price]
+  (fn [percentage]
+    (- price (* price percentage))))
+
 (let [complete-request  (complete-request my-request)
       discount-p        (discount-percentage complete-request)
       total             (:total complete-request)
-      discount-amount   (* total discount-p)
-      new-request-total (- total discount-amount)]
+      new-request-total ((apply-discount total) discount-p)]
   (println "Value of the request with discount applied: " new-request-total))
 
 
