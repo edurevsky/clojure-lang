@@ -50,10 +50,10 @@
   [request]
   (let [total          (:total request)
         items-quantity (:items-quantity request)]
-    (if
-      (and (> total 200) (> items-quantity 5))
-      :twenty-percent
-      :ten-percent)))
+    (cond (> total 200)        :twenty-percent
+          (> items-quantity 5) :ten-percent
+          (> total 500)        :twenty-five-percent
+          :else                :none)))
 
 
 (defmulti discount-percentage discount-fn)
@@ -65,6 +65,14 @@
 (defmethod discount-percentage :ten-percent
   [request]
   0.1)
+
+(defmethod discount-percentage :twenty-five-percent
+  [request]
+  0.25)
+
+(defmethod discount-percentage :none
+  [request]
+  1)
 
 (let [complete-request  (complete-request my-request)
       discount-p        (discount-percentage complete-request)
